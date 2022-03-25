@@ -30,7 +30,10 @@ Where $\frac{dE}{dx}$ is the muon's MIP energy loss. We assume any PMT that is i
 ## Fraction of photons reaching the detector
 First, we want to calculate the number of photons lost due to ionization, then we want to find how many reach the PMT surface given the reflective surfaces.
 ### Reflections
-Consider a single photon shown in the figure below
+Consider a single photon reflecting off a surface of reflectivity $R$ shown in the figure below.
+![reflection](/Images/reflection.png)
+The photon will reach a detector located at $(0,x+L)$ with a probability of $R$. The two momentum vector will be $(k_x,-k_y)$ before the reflection, and $(k_x,k_y)$ after the collision. The reflection performs a parity operation on the y-comp of the momentum. If instead we apply this parity to the detector, and leave the two momentum alone, the total distance traveled by the two paths will be the same
+
 ### Attenuation $R_I(x)$
 
 
