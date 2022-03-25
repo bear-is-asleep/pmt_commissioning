@@ -38,7 +38,7 @@ The photon will reach a detector located at $(0,L+a)$ with a probability of $R$.
 
 
 ### Attenuation $R_I(x)$
-Now that we have successfully accounted for reflections, we can account for ionization losses for photons. The rate of photon absorption is characterized by $R_I(x)=e^{\x/\lambda}$, where $\frac{1}{\lambda} = \frac{1}{\lambda_{att}} + \frac{1}{\lambda_{R}} $
+Now that we have successfully accounted for reflections, we can account for ionization losses for photons. The rate of photon absorption is characterized by $R_I(x)=e^{-x/\lambda}$, where $\frac{1}{\lambda} = \frac{1}{\lambda_{att}} + \frac{1}{\lambda_{R}} $
 
 
 
