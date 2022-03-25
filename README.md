@@ -32,11 +32,13 @@ First, we want to calculate the number of photons lost due to ionization, then w
 ### Reflections
 Consider a single photon reflecting off a surface at $(0,L)$ of reflectivity $R$ shown in the figure below.
 ![reflection](/Images/reflection.png)
-The photon will reach a detector located at $(0,L+a)$ with a probability of $R$. The two momentum vector will be $(k_x,-k_y)$ before the reflection, and $(k_x,k_y)$ after the collision. The reflection performs a parity operation on the y-comp of the momentum. If instead we apply this parity to the detector, and leave the two momentum alone, the total distance traveled by the two paths will be the same. Thus we preserve the distance traveled by the track by introducing a detector that exists only in the reflected plane. In general, we can apply this to any number of reflections across any surface. The total reflectivity will be $R=\Pi_i^NR_i$ where $N$ is the total number of reflections, and $R_i$ is the reflectivity of the $i^{th}$ plane. Below are the reflectivities of mirror PMTs, with the mirrored PMT being in the center.
+The photon will reach a detector located at $(0,L+a)$ with a probability of $R$. The two momentum vector will be $(k_x,-k_y)$ before the reflection, and $(k_x,k_y)$ after the collision. The reflection performs a parity operation on the y-comp of the momentum. If instead we apply this parity to the detector, and leave the two momentum alone, the total distance traveled by the two paths will be the same. Thus we preserve the distance traveled by the track by introducing a detector that exists only in the reflected plane. In general, we can apply this to any number of reflections across any surface. The total reflectivity will be $R=\Pi_i^NR_i$ where $N$ is the total number of reflections, and $R_i$ is the reflectivity of the $i^{th}$ plane. Below are the total number of reflections and reflectivities of mirror PMTs, with the mirrored PMT being in the center (Note these are the reflectivity values for a coated PMT).
+![coated_ref](/Plots/PMT118ckey__tot_ref.jpg)
+![coated_ref](/Plots/PMT118ckey__Reflectivity.jpg)
 
 
 ### Attenuation $R_I(x)$
-
+Now that we have successfully accounted for reflections, we can account for ionization losses for photons. The rate of photon absorption is characterized by $R_I(x)=e^{\x/\lambda}$, where $\frac{1}{\lambda} = \frac{1}{\lambda_{att}} + \frac{1}{\lambda_{R}} $
 
 
 
