@@ -45,6 +45,9 @@ $\epsilon_{VUV} = QE\times (\epsilon_{ws} \times P_{vis} + (1-\epsilon_{ws}) \ti
 ### Attenuation $R_I(x)$
 Now that we have successfully accounted for reflections, we can account for ionization losses for photons. The rate of photon absorption is characterized by $R_I(x)=e^{-x/\lambda}$, where $\frac{1}{\lambda} = \frac{1}{\lambda_{att}} + \frac{1}{\lambda_{R}} $
 
+### Dispersion $d(x)$
+
+
 
 
 
