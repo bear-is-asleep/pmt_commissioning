@@ -35,6 +35,11 @@ Consider a single photon reflecting off a surface at $(0,L)$ of reflectivity $R$
 The photon will reach a detector located at $(0,L+a)$ with a probability of $R$. The two momentum vector will be $(k_x,-k_y)$ before the reflection, and $(k_x,k_y)$ after the collision. The reflection performs a parity operation on the y-comp of the momentum. If instead we apply this parity to the detector, and leave the two momentum alone, the total distance traveled by the two paths will be the same. Thus we preserve the distance traveled by the track by introducing a detector that exists only in the reflected plane. In general, we can apply this to any number of reflections across any surface. The total reflectivity will be $R=\Pi_i^NR_i$ where $N$ is the total number of reflections, and $R_i$ is the reflectivity of the $i^{th}$ plane. Below are the total number of reflections and reflectivities of mirror PMTs, with the mirrored PMT being in the center (Note these are the reflectivity values for a coated PMT).
 ![coated_ref](/Plots/PMT118ckey__tot_ref.jpg)
 ![coated_ref](/Plots/PMT118ckey__Reflectivity.jpg)
+Ultimately, this modifies our efficiencies as follows: 
+
+$\epsilon_{vis} = QE \times P_{vis} \times R$
+
+$\epsilon_{VUV} = QE\times (\epsilon_{ws} \times P_{vis} + (1-\epsilon_{ws}) \times P_{VUV}) \times R$ 
 
 
 ### Attenuation $R_I(x)$
