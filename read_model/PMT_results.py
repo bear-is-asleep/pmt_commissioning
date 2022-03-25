@@ -69,6 +69,14 @@ for tpc in range(2):
   plotters.save_plot(f'pred_err_TPC{tpc}_nodisp')
   plt.close()
 
+  #Constant photon dispersion
+  fig,ax = plotters.plot_TPC(tpc,'ophit_pred_consdisp','$N_{pred} \ d(x)=f$',pmt_hits_df_trunc)
+  plotters.save_plot(f'ophit_pred_TPC{tpc}_consdisp')
+  plt.close()
+  fig,ax = plotters.plot_TPC(tpc,'pred_err_consdisp','$ (N_{pred}-N_{obs})/N_{obs} \ d(x)=f$',pmt_hits_df_trunc)
+  plotters.save_plot(f'pred_err_TPC{tpc}_consdisp')
+  plt.close()
+
   #No photon reflections
   fig,ax = plotters.plot_TPC(tpc,'ophit_pred_noref','$N_{pred}$ (No reflections)',pmt_hits_df_trunc)
   plotters.save_plot(f'ophit_pred_TPC{tpc}_noref')
@@ -86,10 +94,10 @@ for tpc in range(2):
   plt.close()
 
   #No photon dispersion or attenuation
-  fig,ax = plotters.plot_TPC(tpc,'ophit_pred_nodisp_noatt','$N_{pred} \ d(x)=1 \ R_I(x)$',pmt_hits_df_trunc)
+  fig,ax = plotters.plot_TPC(tpc,'ophit_pred_nodisp_noatt','$N_{pred} \ d(x)=1 \ R_I(x)=1$',pmt_hits_df_trunc)
   plotters.save_plot(f'ophit_pred_TPC{tpc}_nodisp_noatt')
   plt.close()
-  fig,ax = plotters.plot_TPC(tpc,'pred_err_nodisp_noatt','$ (N_{pred}-N_{obs})/N_{obs} \ d(x)=1 \ R_I(x)$ (No reflections)',pmt_hits_df_trunc)
+  fig,ax = plotters.plot_TPC(tpc,'pred_err_nodisp_noatt','$ (N_{pred}-N_{obs})/N_{obs} \ d(x)=1 \ R_I(x)=1$ (No reflections)',pmt_hits_df_trunc)
   plotters.save_plot(f'pred_err_TPC{tpc}_nodisp_noatt')
   plt.close()
 
