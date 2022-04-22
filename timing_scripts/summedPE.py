@@ -20,6 +20,8 @@ PE_tpc0_tright2_df = pd.read_pickle('data/summedPE_tpc0_tright2df.pkl')
 PE_tpc0_tright3_df = pd.read_pickle('data/summedPE_tpc0_tright3df.pkl')
 PE_tpc0_tright4_df = pd.read_pickle('data/summedPE_tpc0_tright4df.pkl')
 PE_tpc0_tright5_df = pd.read_pickle('data/summedPE_tpc0_tright5df.pkl')
+PE_tpc0_tright6_df = pd.read_pickle('data/summedPE_tpc0_tright6df.pkl')
+#PE_tpc0_tright7_df = pd.read_pickle('data/summedPE_tpc0_tright7df.pkl')
 muon_tpc0_df = pd.read_pickle('data/muon_df_tpc0.pkl')
 muon_plot_tpc0_df = muon_tpc0_df.drop(['nmuontrks','muontrk_t0'],axis=1)
 muon_plot_tpc0_df = pmtpic.get_muon_tracks(muon_plot_tpc0_df)
@@ -29,19 +31,20 @@ hit_bw = 20
 
 
 #Parameters
-indeces = PE_tpc0_tright0_df.index.drop_duplicates()[:10]
+indeces = PE_tpc0_tright0_df.index.drop_duplicates()[1:3]
 tpcs = [0]
-trights = [0.25,0.5,1,2,10,1000] #Time in us to sum over this window of time
+tleft = 0.1
+trights = [0.21,0.22,0.225,0.23,0.24,0.25,1000] #Time in us to sum over this window of time
 
 #We save dataframes based on binwidth, I don't see a good reason to fix it, it works..
 PE_tpc0_dfs = [PE_tpc0_tright0_df,PE_tpc0_tright1_df,
 PE_tpc0_tright2_df,PE_tpc0_tright3_df,PE_tpc0_tright4_df,
-PE_tpc0_tright5_df] #Enumerate over multiple binwidths
+PE_tpc0_tright5_df,PE_tpc0_tright6_df]#,PE_tpc0_tright7_df] #Enumerate over multiple binwidths
 
 for tind,PE_tpc0_df in enumerate(PE_tpc0_dfs):
   for i,index in enumerate(indeces):
     for tpc in tpcs:
-      fig,ax = pmtplotters.plot_TPC(tpc,'summed_PE',rf'PE for $t \in $[0,{trights[tind]}] $\mu$s'+f'\nSubrun {index[1]}, Event {index[2]}', 
+      fig,ax = pmtplotters.plot_TPC(tpc,'summed_PE',rf'PE for $t \in $[{tleft},{trights[tind]}] $\mu$s',#+f'\nSubrun {index[1]}, Event {index[2]}', 
       PE_tpc0_df.loc[index],normalize=True)
       ax,fig = pmtplotters.plot_tracks(muon_plot_tpc0_df.loc[index],'muontrk_z1_0','muontrk_y1_0','muontrk_z2_0','muontrk_y2_0',
             'muontrk_z1_1','muontrk_y1_1','muontrk_z2_1','muontrk_y2_1',ax=ax,fig=fig,indeces=[index])

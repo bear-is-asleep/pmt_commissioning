@@ -14,7 +14,7 @@ op_df_tpc1 = pd.read_pickle('data/op_df_tpc1.pkl')
 pmts = pd.read_pickle('data/PMT_info.pkl')
 
 #Parameters
-bw = 0.05 #time step
+bw = 0.0025 #time step
 
 channels = pmts.loc[:,'ophit_opdet'].drop_duplicates().values #Channels
 #Run information
@@ -25,8 +25,8 @@ columns = ['run','subrun','event','ophit_ch','ophit_opdet_type',
           'op_tpc','tleft','tright','summed_PE','tot_PE','ophit_opdet_x',
           'ophit_opdet_y','ophit_opdet_z']
 
-tleft = 0
-trights = [0.25,0.5,1,2,10,1000] #Time in us to sum over this window of time
+tleft = 0.1
+trights = [0.21,0.22,0.225,0.23,0.24,0.25,1000] #Time in us to sum over this window of time
 
 for tind,tright in enumerate(trights):
   #TPC0          

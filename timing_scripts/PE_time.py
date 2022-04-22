@@ -22,18 +22,20 @@ op_df_tpc1 = pd.read_pickle('data/op_df_tpc1.pkl')
 plotters.plot_stuff()
 
 #Iterable params
-bws = [0.01] #binwidth: [nleft,nright]
-pmts = [0,1,6,166] #Test coating, no coating and specific channels
-tpcs = [0,1] 
-left = 0 #left bound value
-right = 1 #right bound value
+bws = [0.002000001] #binwidth: [nleft,nright]
+pmts = [0,1] #Test coating, no coating and specific channels
+tpcs = [0] 
+left = 0.1 #left bound value
+right = 0.3 #right bound value
+vlinex1 = 0.2
+vlinex2 = 0.3 #Draw vertical lines for region of interest
 
 cnter = -1 #This is to keep track of bw label for plot
 for bw in bws:
   cnter += 1
   for pmt in pmts:
     for tpc in tpcs:
-      for i in range(10): #iterate through tb
+      for i in range(1): #iterate through tb
         if tpc == 0:
           df = op_df_tpc0.copy()
         elif tpc == 1:
@@ -43,10 +45,8 @@ for bw in bws:
         index = df.index.drop_duplicates()[i]
         bincenters,yvals,title = pmtplotters.get_xy_bins(df,'ophit_peakT','ophit_pe',index,bw,pmt=pmt,tpc=tpc)
         ax,fig = pmtplotters.make_bar_scatter_plot(bincenters,yvals,bw,title=title,
-                left=left,right=right)
+                left=left,right=right,vlinex1=vlinex1,vlinex2=vlinex2,textx=0.05)
         ax.grid()
-        ax.axvline(x=0,ls='--',c='k')
-        ax.axvline(x=0.25,ls='--',c='k')
         plotters.save_plot(f'pe_time_pmt{pmt}_tpc{tpc}_bw{cnter}_event{i}')
         plt.close()
 
