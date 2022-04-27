@@ -22,7 +22,7 @@ op_df_tpc1 = pd.read_pickle('data/op_df_tpc1.pkl')
 plotters.plot_stuff()
 
 #Iterable params
-bws = [0.002000001] #binwidth: [nleft,nright]
+bws = [0.00200000001] #binwidth: [nleft,nright]
 pmts = [0,1] #Test coating, no coating and specific channels
 tpcs = [0] 
 left = 0.1 #left bound value
