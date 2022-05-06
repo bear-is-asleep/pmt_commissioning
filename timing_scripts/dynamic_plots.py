@@ -16,32 +16,59 @@ import pandas as pd
 global sc
 global cax
 
+#Pass event to display
+argList = sys.argv[1:]
+
+#Handle people who don't know how to run this
+if len(argList)<2:
+  raise Exception(f'You should specify an event for the first input.\nSecondly you should specify the tpc (0 or 1)\nThe last value should specify sample type (ew or fb)')
+else: 
+  tpc = int(argList[1])
+which_sample = argList[2]
+
+#Make dataframes
+scalarPE_df = pd.read_pickle(f'data/scalarPE{tpc}_{which_sample}_df.pkl')
+vectorPE_df = pd.read_pickle(f'data/vectorPE{tpc}_{which_sample}_df.pkl')
+indeces = scalarPE_df.index.drop_duplicates()
+
+index = indeces[int(argList[0])]
+
 #Load dataframes for plotting
-scalarPE_df = pd.read_pickle('data/scalarPE_df.pkl')
-vectorPE_df = pd.read_pickle('data/vectorPE_df.pkl')
-muon_df = pd.read_pickle('data/muon_df_tpc0.pkl')
+muon_df = pd.read_pickle(f'data/muon_{which_sample}_df.pkl')
+muon_t0 = muon_df.loc[index,'muontrk_t0']
 
 #Clean data
 muon_plot_df = muon_df.drop(['nmuontrks','muontrk_t0'],axis=1)
 muon_plot_df = pmtpic.get_muon_tracks(muon_plot_df)
 muon_plot_df = muon_plot_df.set_index(['run','subrun','event'])
 
-indeces = scalarPE_df.index.drop_duplicates()
-
-#Pass event to display
-argList = sys.argv[1:]
-
-#Handle people who don't know how to run this
-if len(argList)<1 or int(argList[0]) > len(indeces):
-  raise Exception(f'You should specify an event (choose number between 0 and {indeces.shape[0]-1})')
-else: 
-  index = indeces[int(argList[0])]
-  print(f'Making plot for Run {index[0]} Subrun {index[1]} Event {index[2]}')
-
 #Keep single event
 scalardf = scalarPE_df.loc[index]
 vectordf = vectorPE_df.loc[index]
+#print(muon_plot_df,index)
 muon_df = muon_plot_df.loc[index]
+
+#Print statements
+pic.print_stars()
+print(f'Making plot for Run {index[0]} Subrun {index[1]} Event {index[2]} TPC{tpc}')
+if tpc == 0:
+  x1 = muon_df.loc['muontrk_x1_0']
+  x2 = muon_df.loc['muontrk_x2_0']
+  y1 = muon_df.loc['muontrk_y1_0']
+  y2 = muon_df.loc['muontrk_y2_0']
+  z1 = muon_df.loc['muontrk_z1_0']
+  z2 = muon_df.loc['muontrk_z2_0']
+if tpc == 1:
+  x1 = muon_df.loc['muontrk_x1_1']
+  x2 = muon_df.loc['muontrk_x2_1']
+  y1 = muon_df.loc['muontrk_y1_1']
+  y2 = muon_df.loc['muontrk_y2_1']
+  z1 = muon_df.loc['muontrk_z1_1']
+  z2 = muon_df.loc['muontrk_z2_1']
+
+print(f'Muon moves from [{x1:.1f},{y1:.2f},{z1:.2f}] to [{x2:.1f},{y2:.2f},{z2:.2f}] starting at t={muon_t0}')
+
+pic.print_stars()
 
 
 #This will probably go in a plotter function
@@ -50,7 +77,6 @@ trights = vectordf.loc[:,'tright'].drop_duplicates().values #Use this for slider
 #Constants
 vmax = vectordf.loc[:,'summed_PE'].values.max() #Max value for colorbar
 coating=2 #Both coatings
-tpc = 0 #Initialize tpc
 tleft = scalardf.loc[:,'tleft'].drop_duplicates().values[0] #First time PE is seen
 
 #Initial params
@@ -65,7 +91,9 @@ df = df.loc[:,~df.columns.duplicated()] #Remove duplicate columns
 fig,ax,sc,cax = pmtplotters.interactive_TPC(tpc,'summed_PE',title,df,coating=coating,cmap='viridis',
   return_plot=True,normalize=False,facecolor='cyan',ax=None,fig=None,vmax=vmax)
 pmtplotters.plot_tracks(muon_df,'muontrk_z1_0','muontrk_y1_0','muontrk_z2_0','muontrk_y2_0',
-            'muontrk_z1_1','muontrk_y1_1','muontrk_z2_1','muontrk_y2_1',ax=ax,fig=fig,indeces=[index])
+            'muontrk_z1_1','muontrk_y1_1','muontrk_z2_1','muontrk_y2_1',indeces=[index],ax=ax,fig=fig,tpc=tpc)
+
+
 
 #Vertical slider
 axtright = fig.add_axes([0.1,0.25,0.0225,0.63])
