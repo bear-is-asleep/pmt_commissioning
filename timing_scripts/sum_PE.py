@@ -53,7 +53,7 @@ scalar_arr1 = np.zeros((len(indeces),len(channels),len(columns))) #Array with si
 vector_arr1 = np.zeros((len(indeces),len(channels),trights_size,len(vector_columns))) #Array with vector for each element
 
 for i,index in enumerate(indeces): #Iterate over events
-  if index == (1,26,586) or index == (1,27,18): continue #Temp check
+  #if index == (1,26,586) or index == (1,27,18): continue #Temp check
   event_start = time()
   #Get first time that PMT sees light - TPC0
   bincenters0,allPE0,_ = pmtplotters.get_xy_bins(op_df,'ophit_peakT','ophit_pe',index,bw,pmt=2,tpc=0)
