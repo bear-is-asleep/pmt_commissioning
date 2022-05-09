@@ -29,7 +29,13 @@ pmts = pd.read_pickle('data/PMT_info.pkl')
 
 #Parameters
 bw = 0.002 #time step 0.002 is minimum
-thresholdPE = 7000 #Min threshold for light to be seen in an event
+#Set window size, number of binwidths to left and right of peakT
+leftshift = 10
+rightshift = 20
+number_pmts=10 #Number of pmts that need to be greater than the threshold
+thresholdPE=100 #PE for PMT to pass threshold
+learn_rate = 20 #Decrease threshold by this amount for none type
+minthreshold = 20 #minimum accepted threshold
 
 channels = pmts.loc[:,'ophit_opdet'].drop_duplicates().values #Channels
 #indeces = indeces[:10] #Grab first 10 events for now
@@ -40,8 +46,8 @@ columns = ['run','subrun','event','ophit_ch','ophit_opdet_type',
           'ophit_opdet_y','ophit_opdet_z']
 vector_columns = ['summed_PE','tright','run','subrun','event','ophit_ch']
 
-window_size=0.04 #Time slice window to look at (40 us), must be evenly divisible by bw
-trights_size = int(window_size/bw) #Length of trights array
+#window_size=0.04 #Time slice window to look at (40 us), must be evenly divisible by bw
+trights_size = leftshift+rightshift #Length of trights array
 
 
 #TPC0          
@@ -52,19 +58,35 @@ vector_arr0 = np.zeros((len(indeces),len(channels),trights_size,len(vector_colum
 scalar_arr1 = np.zeros((len(indeces),len(channels),len(columns))) #Array with single value for each element
 vector_arr1 = np.zeros((len(indeces),len(channels),trights_size,len(vector_columns))) #Array with vector for each element
 
+#Temporary limit events to save time
+cnt = 0
 for i,index in enumerate(indeces): #Iterate over events
   #if index == (1,26,586) or index == (1,27,18): continue #Temp check
+  cnt+=1
+  if cnt > 5: break #Break out of loop after x events
   event_start = time()
   #Get first time that PMT sees light - TPC0
-  bincenters0,allPE0,_ = pmtplotters.get_xy_bins(op_df,'ophit_peakT','ophit_pe',index,bw,pmt=2,tpc=0)
-  peakT0 = round(bincenters0[np.argmax(allPE0>thresholdPE)]-3*bw/2,3) #Window befor first time where PMT sees light, round to nearest 3rd decimal (our 2ns resolution)
-  trights0 = np.arange(peakT0,peakT0+window_size,bw) #Time in us to sum over this window of time
+  peakT0 = pmtpic.get_peakT(op_df,pmts,0,index,bw,number_pmts=number_pmts,thresholdPE=thresholdPE) #Get peakT from function
+  temp_threshold = thresholdPE #Set temp threshold to handle events that do not pass, we will decrease it until we get the right peakT
+  while peakT0 is None:
+    if temp_threshold <= minthreshold:
+      peakT0 = -9999 #Set dumby value for pmts that don't see the proper amount of light
+      break
+    temp_threshold = temp_threshold - learn_rate
+    peakT0 = pmtpic.get_peakT(op_df,pmts,0,index,bw,number_pmts=number_pmts,thresholdPE=temp_threshold) #Get peakT from function
+  trights0 = np.arange(peakT0-leftshift*bw,peakT0+rightshift*bw,bw) #Time in us to sum over this window of time
 
   #Get first time that PMT sees light - TPC1
-  bincenters1,allPE1,_ = pmtplotters.get_xy_bins(op_df,'ophit_peakT','ophit_pe',index,bw,pmt=2,tpc=1)
-  peakT1 = round(bincenters1[np.argmax(allPE1>thresholdPE)]-3*bw/2,3) #Window befor first time where PMT sees light, round to nearest 3rd decimal (our 2ns resolution)
-  trights1 = np.arange(peakT1,peakT1+window_size,bw) #Time in us to sum over this window of time
-  
+  peakT1 = pmtpic.get_peakT(op_df,pmts,1,index,bw,number_pmts=number_pmts,thresholdPE=thresholdPE) #Get peakT from function
+  temp_threshold = thresholdPE #Set temp threshold to handle events that do not pass, we will decrease it until we get the right peakT
+  while peakT1 is None:
+    if temp_threshold <= minthreshold:
+      peakT1 = -9999 #Set dumby value for pmts that don't see the proper amount of light
+      break
+    temp_threshold = temp_threshold - learn_rate
+    peakT1 = pmtpic.get_peakT(op_df,pmts,1,index,bw,number_pmts=number_pmts,thresholdPE=temp_threshold) #Get peakT from function
+  trights1 = np.arange(peakT1-leftshift*bw,peakT1+rightshift*bw,bw) #Time in us to sum over this window of time
+
   #Error handling for cases where trights(0,1) > trights_size. We will remove the last element
   if len(trights0) == trights_size+1:
     trights0 = np.delete(trights0,-1) #remove last element
@@ -157,7 +179,7 @@ vector_df0 = pd.DataFrame(vector_arr0,columns=vector_columns)
 
 #Convert to dataframe - TPC1
 scalar_arr1 = scalar_arr1.reshape(len(indeces)*len(channels),len(columns))
-vector_arr1 = vector_arr1.reshape(len(indeces)*len(channels)*len(trights0),len(vector_columns))
+vector_arr1 = vector_arr1.reshape(len(indeces)*len(channels)*len(trights1),len(vector_columns))
 scalar_df1 = pd.DataFrame(scalar_arr1,columns=columns)
 vector_df1 = pd.DataFrame(vector_arr1,columns=vector_columns)
 

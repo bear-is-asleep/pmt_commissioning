@@ -40,9 +40,9 @@ for i in range(1,31):
     op_df_ew = pd.read_pickle(f'data/op_df_ew__precut{i}.pkl')
 
     for row,line in muon_df_ew.iterrows():
-      if round(line['muontrk_x1'],3) == round(line['muontrk_x2'],3): #Drop rows with matching x1 and x2 (check nearest 3rd digit, python has rounding issues)
+      if round(line['muontrk_x1'],1) == round(line['muontrk_x2'],1): #Drop rows with matching x1 and x2 (check nearest 1st digit, python has rounding issues)
         indeces_drop.append(row)
-      if abs(line['muontrk_x1']) < apa_threshold and abs(line['muontrk_x2']) < apa_threshold: #Keep near-apa muons 
+      if abs(line['muontrk_x1']) < apa_threshold or abs(line['muontrk_x2']) < apa_threshold: #Keep near-apa muons 
         indeces_drop.append(row)
       if line['nmuontrks'] > 1: #Only one track
         indeces_drop.append(row)
@@ -52,15 +52,15 @@ for i in range(1,31):
     muon_ew_dfs.append(muon_df_ew.drop(indeces_drop)) #Append good events to list
 
   #Front back
-  if ew:
+  if fb:
     indeces_drop = []
     muon_df_fb = pd.read_pickle(f'data/muon_df_fb__precut{i}.pkl')
     op_df_fb = pd.read_pickle(f'data/op_df_fb__precut{i}.pkl')
 
     for row,line in muon_df_fb.iterrows():
-      if line['muontrk_x1'] == line['muontrk_x2']: #Drop rows with matching x1 and x2
+      if round(line['muontrk_x1'],1) == round(line['muontrk_x2'],1): #Drop rows with matching x1 and x2
         indeces_drop.append(row)
-      if abs(line['muontrk_x1']) < apa_threshold and abs(line['muontrk_x2']) < apa_threshold: #Keep near-apa muons 
+      if abs(line['muontrk_x1']) < apa_threshold or abs(line['muontrk_x2']) < apa_threshold: #Keep near-apa muons 
         indeces_drop.append(row)
       if line['nmuontrks'] > 1: #Only one track
         indeces_drop.append(row)
